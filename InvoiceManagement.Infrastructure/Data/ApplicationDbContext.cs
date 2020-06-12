@@ -7,15 +7,44 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InvoiceManagement.Application.Common.Interfaces;
+using InvoiceManagement.Domain.Entities;
+using System.Threading;
+using InvoiceManagement.Domain.Common;
 
 namespace InvoiceManagement.Infrastructure.Data
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
     {
+        private readonly ICurrentUserService _currentUserService;
         public ApplicationDbContext(
             DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+            IOptions<OperationalStoreOptions> operationalStoreOptions,
+            ICurrentUserService currentUserService) : base(options, operationalStoreOptions)
         {
+            this._currentUserService = currentUserService;
+        }
+
+        public DbSet<Invoice> Invoices { get ; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get ; set; }
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            foreach (var entry in ChangeTracker.Entries<AuditEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedBy = _currentUserService.UserId;
+                        entry.Entity.Created = DateTime.UtcNow;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                        entry.Entity.LastModified = DateTime.UtcNow;
+                        break;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
