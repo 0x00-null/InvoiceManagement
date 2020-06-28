@@ -1,12 +1,15 @@
-﻿using InvoiceManagement.Domain.Common;
-using InvoiceManagement.Domain.Enums;
+﻿using InvoiceManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
-namespace InvoiceManagement.Domain.Entities
+namespace InvoiceManagement.Application.Invoices.ViewModels
 {
-    public class Invoice : AuditEntity
+    public class InvoiceViewModel
     {
+        public InvoiceViewModel()
+        {
+            this.InvoiceItems = new List<InvoiceItemViewModel>();
+        }
         public Guid Id { get; set; }
         public string InvoiceNumber { get; set; }
         public string Logo { get; set; }
@@ -20,12 +23,7 @@ namespace InvoiceManagement.Domain.Entities
         public double Tax { get; set; }
         public TaxType TaxType { get; set; }
         public double AmountPaid { get; set; }
-        public ICollection<InvoiceItem> InvoiceItems { get; set; }
-
-        public Invoice()
-        {
-            InvoiceItems = new HashSet<InvoiceItem>();
-        }
-
+        public IList<InvoiceItemViewModel> InvoiceItems { get; set; }
+        public DateTime Created { get; set; }
     }
 }

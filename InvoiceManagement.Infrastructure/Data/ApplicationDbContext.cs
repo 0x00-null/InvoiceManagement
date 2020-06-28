@@ -1,16 +1,14 @@
-﻿using InvoiceManagement.Infrastructure.Models;
-using IdentityServer4.EntityFramework.Options;
+﻿using IdentityServer4.EntityFramework.Options;
+using InvoiceManagement.Application.Common.Interfaces;
+using InvoiceManagement.Domain.Common;
+using InvoiceManagement.Domain.Entities;
+using InvoiceManagement.Infrastructure.Models;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using InvoiceManagement.Application.Common.Interfaces;
-using InvoiceManagement.Domain.Entities;
 using System.Threading;
-using InvoiceManagement.Domain.Common;
+using System.Threading.Tasks;
 
 namespace InvoiceManagement.Infrastructure.Data
 {
@@ -25,8 +23,8 @@ namespace InvoiceManagement.Infrastructure.Data
             this._currentUserService = currentUserService;
         }
 
-        public DbSet<Invoice> Invoices { get ; set; }
-        public DbSet<InvoiceItem> InvoiceItems { get ; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             foreach (var entry in ChangeTracker.Entries<AuditEntity>())

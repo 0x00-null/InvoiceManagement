@@ -1,10 +1,10 @@
-using System;
 using InvoiceManagement.Infrastructure.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace InvoiceManagement.WebApi
 {
@@ -12,8 +12,8 @@ namespace InvoiceManagement.WebApi
     {
         public static void Main(string[] args)
         {
-           var host = CreateHostBuilder(args).Build();
-            using (var scope = host.Services.CreateScope()) 
+            var host = CreateHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 try
@@ -24,7 +24,7 @@ namespace InvoiceManagement.WebApi
                 catch (Exception ex)
                 {
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex,"An error occured while migrating or seeding the database");
+                    logger.LogError(ex, "An error occured while migrating or seeding the database");
                 }
             };
             host.Run();
